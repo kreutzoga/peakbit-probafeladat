@@ -14,11 +14,36 @@ const { data: blogPosts } = await useFetch(
   "https://trial.peakbit.tech/api/articles/list",
   {
     method: "get",
-    query: { page: 1, pageSize: 100 },
+    query: { page: 1, pageSize: 12 },
   }
 );
 
 if (!blogPosts?.value?.list) {
   throw createError({ fatal: true });
 }
+
+let currentPage = 1;
+
+async function loadMorePosts() {
+  const { data: moreBlogPosts } = await useFetch(
+    "https://trial.peakbit.tech/api/articles/list",
+    {
+      method: "get",
+      query: { page: currentPage + 1, pageSize: 12 },
+    }
+  );
+
+  if (moreBlogPosts.value.list) {
+    blogPosts.value.list.push(...moreBlogPosts.value.list);
+    currentPage++;
+  }
+}
+
+window.addEventListener("scroll", () => {
+  if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+    if (currentPage < blogPosts.value.meta.pageCount) {
+      loadMorePosts();
+    }
+  }
+});
 </script>
