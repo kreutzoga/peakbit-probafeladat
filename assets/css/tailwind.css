@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: Poppins;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply bg-red-500 text-white py-2 px-4 rounded-lg;
+  }
+  .card {
+    @apply bg-white shadow-sm;
+  }
+}
